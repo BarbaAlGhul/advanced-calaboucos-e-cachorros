@@ -5,3 +5,6 @@ This is an advanced version of the first game(that was actually a prototype), wh
 ](https://github.com/libtcod/python-tcod) 5.0.1 and Python 3.6.6
 
 This code is totally based on the [Roguelike Tutorial Revised](http://rogueliketutorials.com/)
+
+## Resources
+Font: [REXPaint's 10x10 tweaked by qbicfeet](https://www.gridsagegames.com/rexpaint/resources.html)
