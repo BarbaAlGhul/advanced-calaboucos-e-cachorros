@@ -1,13 +1,26 @@
 import tdl
 from input_handlers import handle_keys
+from entity import Entity
+from render_functions import render_all, clear_all
+from map_utils import make_map
 
 
 def main():
     screen_width = 80
     screen_height = 50
+    map_width = 80
+    map_height = 45
 
-    player_x = int(screen_width / 2)
-    player_y = int(screen_height / 2)
+    colors = {
+        'dark_wall' : (0, 0, 100),
+        'dark_ground' : (50, 50, 150)
+    }
+
+    # Declare the entities and hold them in a list
+    # Declara as entidades e coloca elas em uma lista
+    player = Entity(int(screen_width / 2), int(screen_height / 2), '@', (255, 255, 255))
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), '@', (255, 255, 0))
+    entities = [player, npc]
 
     tdl.set_font('font/qbicfeet_10x10.png', columnFirst=False, greyscale=False)
 
@@ -15,17 +28,16 @@ def main():
     # Cria um console separado do root
     root_console = tdl.init(screen_width, screen_height, title='Advanced Calabouços & Cachorros')
     con = tdl.Console(screen_width, screen_height)
+    # Creates the map of the game
+    # Cria o mapa do jogo
+    game_map = tdl.map.Map(map_width, map_height)
+    make_map(game_map)
 
     while not tdl.event.is_window_closed():
-        # Creates the character on the console and blit it on the root
-        # Cria o carácter no console e exibe o console no root
-        con.draw_char(player_x, player_y, '@', bg=None, fg=(255, 255, 255))
-        root_console.blit(con, 0, 0, screen_width, screen_height, 0, 0)
+        render_all(con, entities, game_map, root_console, screen_width, screen_height, colors)
         tdl.flush()
 
-        # Clear the character after the movement
-        # Limpar o carácter depois do movimento
-        con.draw_char(player_x, player_y, ' ', bg=None)
+        clear_all(con, entities)
 
         # Get the user input, if any
         # Pega a entrada do usuário, se existir alguma
@@ -49,8 +61,8 @@ def main():
 
         if move:
             dx, dy = move
-            player_x += dx
-            player_y += dy
+            if game_map.walkable[player.x + dx, player.y + dy]:
+                player.move(dx, dy)
 
         if exit_game:
             return True
