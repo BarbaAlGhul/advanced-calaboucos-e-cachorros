@@ -1,8 +1,16 @@
 from numpy.random import random_integers
+from tdl.map import Map
+
+
+class GameMap(Map):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+        self.explored = [[False for y in range(height)] for x in range(width)]
 
 
 class Rect:
     def __init__(self, x, y, w, h):
+
         self.x1 = x
         self.y1 = y
         self.x2 = x + w
