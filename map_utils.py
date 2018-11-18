@@ -2,6 +2,7 @@ from tdl.map import Map
 
 from random import randint
 from entity import Entity
+from render_functions import RenderOrder
 from components.fighter import Fighter
 from components.ai import BasicMonster
 
@@ -70,12 +71,12 @@ def place_entities(room, entities, max_monsters_per_room, colors):
                 ai_component = BasicMonster()
 
                 monster = Entity(x, y, 'g', colors.get('desaturated_blue'), 'Ghost', blocks=True,
-                                 fighter=fighter_component, ai=ai_component)
+                                 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
             else:
                 fighter_component = Fighter(hp=8, defense=1, power=4)
                 ai_component = BasicMonster()
                 monster = Entity(x, y, 's', colors.get('dark_blue'), 'Soul', blocks=True,
-                                 fighter=fighter_component, ai=ai_component)
+                                 render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
 
             entities.append(monster)
 

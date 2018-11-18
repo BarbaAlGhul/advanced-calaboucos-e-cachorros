@@ -5,7 +5,7 @@ from components.fighter import Fighter
 from death_functions import kill_monster, kill_player
 from entity import Entity, get_blocking_entities_at_location
 from game_states import GameStates
-from render_functions import render_all, clear_all
+from render_functions import render_all, clear_all, RenderOrder
 from map_utils import make_map, GameMap
 
 
@@ -38,7 +38,8 @@ def main():
     # Declare the entities and hold them in a list
     # Declara as entidades e coloca elas em uma lista
     fighter_componente = Fighter(hp=30, defense=2, power=5)
-    player = Entity(0, 0, '@', (255, 255, 255), 'Player', blocks=True, fighter=fighter_componente)
+    player = Entity(0, 0, '@', (255, 255, 255), 'Player',
+                    render_order=RenderOrder.ACTOR, blocks=True, fighter=fighter_componente)
     entities = [player]
 
     tdl.set_font('font/qbicfeet_10x10.png', columnFirst=False, greyscale=False)
@@ -61,7 +62,7 @@ def main():
         if fov_recompute:
             game_map.compute_fov(player.x, player.y, fov=fov_algorithm, radius=fov_radius, light_walls=fov_light_walls)
 
-        render_all(con, entities, game_map, fov_recompute, root_console, screen_width, screen_height, colors)
+        render_all(con, entities, player, game_map, fov_recompute, root_console, screen_width, screen_height, colors)
         tdl.flush()
 
         clear_all(con, entities)
