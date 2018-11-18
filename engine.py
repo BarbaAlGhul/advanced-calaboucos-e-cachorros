@@ -2,6 +2,7 @@ import tdl
 
 from input_handlers import handle_keys
 from components.fighter import Fighter
+from death_functions import kill_monster, kill_player
 from entity import Entity, get_blocking_entities_at_location
 from game_states import GameStates
 from render_functions import render_all, clear_all
@@ -31,6 +32,7 @@ def main():
         'light_ground': (200, 180, 50),
         'desaturated_blue': (83, 136, 237),
         'dark_blue': (0, 62, 124),
+        'dark_red': (191, 0, 0)
     }
 
     # Declare the entities and hold them in a list
@@ -119,12 +121,17 @@ def main():
                 print(message)
 
             if dead_entity:
-                pass
+                if dead_entity == player:
+                    message, game_state = kill_player(dead_entity, colors)
+                else:
+                    message = kill_monster(dead_entity, colors)
+
+                print(message)
 
         if game_state == GameStates.ENEMY_TURN:
             for entity in entities:
                 if entity.ai:
-                    enemy_turn_results  = entity.ai.take_turn(player, game_map, entities)
+                    enemy_turn_results = entity.ai.take_turn(player, game_map, entities)
 
                     for enemy_turn_result in enemy_turn_results:
                         message = enemy_turn_result.get('message')
@@ -134,7 +141,18 @@ def main():
                             print(message)
 
                         if dead_entity:
-                            pass
+                            if dead_entity == player:
+                                message, game_state = kill_player(dead_entity, colors)
+                            else:
+                                message = kill_monster(dead_entity, colors)
+
+                            print(message)
+
+                            if game_state == GameStates.PLAYER_DEAD:
+                                break
+
+                    if game_state == GameStates.PLAYER_DEAD:
+                        break
             else:
                 game_state = GameStates.PLAYERS_TURN
 
