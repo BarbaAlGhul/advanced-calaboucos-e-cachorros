@@ -1,5 +1,7 @@
-from numpy.random import random_integers
 from tdl.map import Map
+
+from numpy.random import random_integers
+from entity import Entity
 
 
 class GameMap(Map):
@@ -49,7 +51,28 @@ def create_v_tunnel(game_map, y1, y2, x):
         game_map.transparent[x, y] = True
 
 
-def make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_height, player):
+def place_entities(room, entities, max_monsters_per_room, colors):
+    # Get a random number of monsters
+    # Pega um número aleatório de monstros
+    number_of_monsters = random_integers(0, max_monsters_per_room)
+
+    for i in range(number_of_monsters):
+        # Choose a raondom location in the room
+        # Escolhe uma localização aleatória na sala
+        x = random_integers(room.x1 + 1, room.x2 - 1)
+        y = random_integers(room.y1 + 1, room.y2 - 1)
+
+        if not any([entity for entity in entities if entity.x == x and entity.y == y]):
+            if random_integers(0, 100) < 80:
+                monster = Entity(x, y, 'g', colors.get('desaturated_blue'), 'Ghost', blocks=True)
+            else:
+                monster = Entity(x, y, 's', colors.get('dark_blue'), 'Soul', blocks=True)
+
+            entities.append(monster)
+
+
+def make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities,
+             max_monsters_per_room, colors):
     rooms = []
     num_rooms = 0
 
@@ -110,6 +133,8 @@ def make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_h
                     # Primeiro move verticalmente depois horizontalmente
                     create_v_tunnel(game_map, prev_y, new_y, prev_x)
                     create_h_tunnel(game_map, prev_x, new_x, new_y)
+
+        place_entities(new_room, entities, max_monsters_per_room, colors)
 
         # Finally, append the new room to the list
         # Por fim acrescenta a sala nova à lista
