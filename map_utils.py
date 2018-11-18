@@ -1,7 +1,9 @@
 from tdl.map import Map
 
-from numpy.random import random_integers
+from random import randint
 from entity import Entity
+from components.fighter import Fighter
+from components.ai import BasicMonster
 
 
 class GameMap(Map):
@@ -54,19 +56,26 @@ def create_v_tunnel(game_map, y1, y2, x):
 def place_entities(room, entities, max_monsters_per_room, colors):
     # Get a random number of monsters
     # Pega um número aleatório de monstros
-    number_of_monsters = random_integers(0, max_monsters_per_room)
+    number_of_monsters = randint(0, max_monsters_per_room)
 
     for i in range(number_of_monsters):
         # Choose a raondom location in the room
         # Escolhe uma localização aleatória na sala
-        x = random_integers(room.x1 + 1, room.x2 - 1)
-        y = random_integers(room.y1 + 1, room.y2 - 1)
+        x = randint(room.x1 + 1, room.x2 - 1)
+        y = randint(room.y1 + 1, room.y2 - 1)
 
         if not any([entity for entity in entities if entity.x == x and entity.y == y]):
-            if random_integers(0, 100) < 80:
-                monster = Entity(x, y, 'g', colors.get('desaturated_blue'), 'Ghost', blocks=True)
+            if randint(0, 100) < 80:
+                fighter_component = Fighter(hp=10, defense=0, power=3)
+                ai_component = BasicMonster()
+
+                monster = Entity(x, y, 'g', colors.get('desaturated_blue'), 'Ghost', blocks=True,
+                                 fighter=fighter_component, ai=ai_component)
             else:
-                monster = Entity(x, y, 's', colors.get('dark_blue'), 'Soul', blocks=True)
+                fighter_component = Fighter(hp=8, defense=1, power=4)
+                ai_component = BasicMonster()
+                monster = Entity(x, y, 's', colors.get('dark_blue'), 'Soul', blocks=True,
+                                 fighter=fighter_component, ai=ai_component)
 
             entities.append(monster)
 
@@ -79,12 +88,12 @@ def make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_h
     for r in range(max_rooms):
         # Random width and height
         # Largura e altura aleatórios
-        w = random_integers(room_min_size, room_max_size)
-        h = random_integers(room_min_size, room_max_size)
+        w = randint(room_min_size, room_max_size)
+        h = randint(room_min_size, room_max_size)
         # Random position whitout going out the bondaries of the map
         # Posição aleatória sem sair dos limites do mapa
-        x = random_integers(0, map_width - w - 1)
-        y = random_integers(0, map_height - h - 1)
+        x = randint(0, map_width - w - 1)
+        y = randint(0, map_height - h - 1)
 
         # Rect class makes rectangles easier to work with
         # A classe Rect faz ficar mais fácil trabalhar com retângulos
@@ -123,7 +132,7 @@ def make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_h
 
                 # Flip a coin (random number that is either 0 or 1)
                 # Joga uma moeda (número aleatório que é 0 ou 1)
-                if random_integers(0, 1) == 1:
+                if randint(0, 1) == 1:
                     # First move horizontally than vertically
                     # Primeiro move horizontalmente depois verticalmente
                     create_h_tunnel(game_map, prev_x, new_x, prev_y)

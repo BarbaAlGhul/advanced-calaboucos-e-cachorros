@@ -1,6 +1,7 @@
 import tdl
 
 from input_handlers import handle_keys
+from components.fighter import Fighter
 from entity import Entity, get_blocking_entities_at_location
 from game_states import GameStates
 from render_functions import render_all, clear_all
@@ -34,7 +35,8 @@ def main():
 
     # Declare the entities and hold them in a list
     # Declara as entidades e coloca elas em uma lista
-    player = Entity(0, 0, '@', (255, 255, 255), 'Player', blocks=True)
+    fighter_componente = Fighter(hp=30, defense=2, power=5)
+    player = Entity(0, 0, '@', (255, 255, 255), 'Player', blocks=True, fighter=fighter_componente)
     entities = [player]
 
     tdl.set_font('font/qbicfeet_10x10.png', columnFirst=False, greyscale=False)
@@ -108,8 +110,8 @@ def main():
 
         if game_state == GameStates.ENEMY_TURN:
             for entity in entities:
-                if entity != player:
-                    print('The ' + entity.name + ' ponders the meaning of its existence.')
+                if entity.ai:
+                    entity.ai.take_turn(player, game_map, entities)
 
             game_state = GameStates.PLAYERS_TURN
 
