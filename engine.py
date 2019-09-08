@@ -1,12 +1,9 @@
-import tdl
+import tcod as libtcod
 
+from entity import Entity
 from input_handlers import handle_keys
-from components.fighter import Fighter
-from death_functions import kill_monster, kill_player
-from entity import Entity, get_blocking_entities_at_location
-from game_states import GameStates
-from render_functions import render_all, clear_all, RenderOrder
-from map_utils import make_map, GameMap
+from render_functions import render_all, clear_all
+from map_objects.game_map import GameMap
 
 
 def main():
@@ -15,147 +12,48 @@ def main():
     map_width = 80
     map_height = 45
 
-    room_max_size = 10
-    room_min_size = 6
-    max_rooms = 30
-
-    fov_algorithm = 'BASIC'
-    fov_light_walls = True
-    fov_radius = 8
-
-    max_monsters_per_room = 3
-
     colors = {
-        'dark_wall': (0, 51, 0),
-        'dark_ground': (38, 115, 38),
-        'light_wall': (130, 110, 50),
-        'light_ground': (200, 180, 50),
-        'desaturated_blue': (83, 136, 237),
-        'dark_blue': (0, 62, 124),
-        'dark_red': (191, 0, 0)
+        'dark_wall': libtcod.Color(0, 51, 0),
+        'dark_ground': (38, 115, 38)
     }
 
-    # Declare the entities and hold them in a list
-    # Declara as entidades e coloca elas em uma lista
-    fighter_componente = Fighter(hp=30, defense=2, power=5)
-    player = Entity(0, 0, '@', (255, 255, 255), 'Player',
-                    render_order=RenderOrder.ACTOR, blocks=True, fighter=fighter_componente)
-    entities = [player]
+    player = Entity(int(screen_width / 2), int(screen_height / 2), '@', libtcod.white)
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), '@', libtcod.yellow)
+    entities = [npc, player]
 
-    tdl.set_font('font/qbicfeet_10x10.png', columnFirst=False, greyscale=False)
+    libtcod.console_set_custom_font('font/qbicfeet_10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_ASCII_INROW)
 
-    # Creates separate consoles from the root
-    # Cria um console separado do root
-    root_console = tdl.init(screen_width, screen_height, title='Advanced Calabouços & Cachorros')
-    con = tdl.Console(screen_width, screen_height)
-    # Creates the map of the game
-    # Cria o mapa do jogo
+    libtcod.console_init_root(screen_width, screen_height, 'Advanced Calabouços & Cachorros', False)
+
+    con = libtcod.console_new(screen_width, screen_height)
+
     game_map = GameMap(map_width, map_height)
-    make_map(game_map, max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities,
-             max_monsters_per_room, colors)
 
-    fov_recompute = True
+    key = libtcod.Key()
+    mouse = libtcod.Mouse()
 
-    game_state = GameStates.PLAYERS_TURN
-
-    while not tdl.event.is_window_closed():
-        if fov_recompute:
-            game_map.compute_fov(player.x, player.y, fov=fov_algorithm, radius=fov_radius, light_walls=fov_light_walls)
-
-        render_all(con, entities, player, game_map, fov_recompute, root_console, screen_width, screen_height, colors)
-        tdl.flush()
-
+    while not libtcod.console_is_window_closed():
+        libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
+        render_all(con, entities, game_map, screen_width, screen_height, colors)
+        libtcod.console_flush()
         clear_all(con, entities)
 
-        fov_recompute = False
-
-        # Get the user input, if any
-        # Pega a entrada do usuário, se existir alguma
-        for event in tdl.event.get():
-            if event.type == 'KEYDOWN':
-                user_input = event
-                break
-        else:
-            user_input = None
-
-        if not user_input:
-            continue
-
-        # Manage the input and do the designated action
-        # Trata a entrada e faz a ação designada
-        action = handle_keys(user_input)
+        action = handle_keys(key)
 
         move = action.get('move')
-        exit_game = action.get('exit')
+        exit = action.get('exit')
         fullscreen = action.get('fullscreen')
 
-        player_turn_results = []
-
-        if move and game_state == GameStates.PLAYERS_TURN:
+        if move:
             dx, dy = move
-            destination_x = player.x + dx
-            destination_y = player.y + dy
-            if game_map.walkable[destination_x, destination_y]:
-                target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+            if not game_map.is_blocked(player.x + dx, player.y + dy):
+                player.move(dx, dy)
 
-                if target:
-                    attack_results = player.fighter.attack(target)
-                    player_turn_results.extend(attack_results)
-                else:
-                    player.move(dx, dy)
-
-                    fov_recompute = True
-
-                game_state = GameStates.ENEMY_TURN
-
-        if exit_game:
+        if exit:
             return True
-
+        
         if fullscreen:
-            tdl.set_fullscreen(not tdl.get_fullscreen())
-
-        for player_turn_result in player_turn_results:
-            message = player_turn_result.get('message')
-            dead_entity = player_turn_result.get('dead')
-
-            if message:
-                print(message)
-
-            if dead_entity:
-                if dead_entity == player:
-                    message, game_state = kill_player(dead_entity, colors)
-                else:
-                    message = kill_monster(dead_entity, colors)
-
-                print(message)
-
-        if game_state == GameStates.ENEMY_TURN:
-            for entity in entities:
-                if entity.ai:
-                    enemy_turn_results = entity.ai.take_turn(player, game_map, entities)
-
-                    for enemy_turn_result in enemy_turn_results:
-                        message = enemy_turn_result.get('message')
-                        dead_entity = enemy_turn_result.get('dead')
-
-                        if message:
-                            print(message)
-
-                        if dead_entity:
-                            if dead_entity == player:
-                                message, game_state = kill_player(dead_entity, colors)
-                            else:
-                                message = kill_monster(dead_entity, colors)
-
-                            print(message)
-
-                            if game_state == GameStates.PLAYER_DEAD:
-                                break
-
-                    if game_state == GameStates.PLAYER_DEAD:
-                        break
-            else:
-                game_state = GameStates.PLAYERS_TURN
+            libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
 
 if __name__ == '__main__':

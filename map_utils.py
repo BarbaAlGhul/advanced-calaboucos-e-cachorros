@@ -1,4 +1,4 @@
-from tdl.map import Map
+from libtcod.map import Map
 
 from random import randint
 from entity import Entity
