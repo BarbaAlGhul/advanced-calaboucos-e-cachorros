@@ -18,6 +18,7 @@ def main():
     fov_algorithm = 0
     fov_light_walls = True
     fov_radius = 10
+    max_monsters_per_room = 3
 
     colors = {
         'dark_wall': libtcod.Color(0, 51, 0),
@@ -26,9 +27,8 @@ def main():
         'light_ground': (200, 180, 50)
     }
 
-    player = Entity(int(screen_width / 2), int(screen_height / 2), '@', libtcod.white)
-    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), '@', libtcod.yellow)
-    entities = [npc, player]
+    player = Entity(0, 0, '@', libtcod.white)
+    entities = [player]
 
     libtcod.console_set_custom_font('font/qbicfeet_10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_ASCII_INROW)
 
@@ -37,7 +37,7 @@ def main():
     con = libtcod.console_new(screen_width, screen_height)
 
     game_map = GameMap(map_width, map_height)
-    game_map.make_map(max_rooms, room_min_size, room_max_size, map_width, map_height, player)
+    game_map.make_map(max_rooms, room_min_size, room_max_size, map_width, map_height, player, entities, max_monsters_per_room)
 
     fov_recompute = True
     fov_map = initialize_fov(game_map)
