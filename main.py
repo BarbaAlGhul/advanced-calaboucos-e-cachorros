@@ -6,7 +6,7 @@ def main() -> None:
     screen_height = 50
 
     tileset = tcod.tileset.load_tilesheet(
-        "font/dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+        "font/qbicfeet_10x10.png", 16, 16, tcod.tileset.CHARMAP_CP437
     )
 
     with tcod.context.new_terminal(
