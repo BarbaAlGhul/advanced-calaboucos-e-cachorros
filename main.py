@@ -13,7 +13,7 @@ def main() -> None:
         screen_width,
         screen_height,
         tileset=tileset,
-        title="Calaboucos e Cachorros Avancado",
+        title="Calabouços e Cachorros Avançado",
         vsync=True,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
