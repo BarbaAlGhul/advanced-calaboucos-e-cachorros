@@ -15,7 +15,7 @@ goblin = Actor(
     color=(63, 127, 63), 
     name="Goblin",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=10, defense=0, power=2)
+    fighter=Fighter(hp=10, defense=0, power=3)
 )
 
 orc = Actor(
@@ -23,5 +23,5 @@ orc = Actor(
     color=(0, 127, 0), 
     name="Orc",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=15, defense=1, power=4)
+    fighter=Fighter(hp=15, defense=1, power=5)
 )
