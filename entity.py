@@ -79,6 +79,7 @@ class Actor(Entity):
         )
         self.ai: Optional[BaseAI] = ai_cls(self)
         self.fighter = fighter
+        self.fighter.entity = self
         
 
     @property
