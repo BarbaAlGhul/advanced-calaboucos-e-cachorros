@@ -44,7 +44,7 @@ class Fighter(BaseComponent):
         self.entity.color = (191, 0 ,0)
         self.entity.blocks_movement = False
         self.entity.ai = None
-        self.entity.name = f"remains of {self.entity.name}"
+        self.entity.name = f"remains of a {self.entity.name}"
         self.entity.render_order = RenderOrder.CORPSE
         
         self.engine.message_log.add_message(death_message, death_message_color)
