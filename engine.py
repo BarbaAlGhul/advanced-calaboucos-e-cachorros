@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from render_functions import render_bar
+
 from typing import TYPE_CHECKING
 
 from tcod.context import Context
@@ -31,10 +33,11 @@ class Engine:
     def render(self, console: Console, context: Context) -> None:
         self.game_map.render(console)
 
-        console.print(
-            x=1,
-            y=47,
-            string=f"HP: {self.player.fighter.hp}/{self.player.fighter.max_hp}"
+        render_bar(
+            console=console,
+            current_value=self.player.fighter.hp,
+            maximum_value=self.player.fighter.max_hp,
+            total_width=20
         )
         context.present(console)
         console.clear()
