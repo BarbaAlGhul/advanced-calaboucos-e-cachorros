@@ -8,7 +8,6 @@ import actions
 from actions import (
     Action,
     BumpAction,
-    EscapeAction,
     PickupAction,
     WaitAction
     )
@@ -111,7 +110,7 @@ class MainGameEventHandler(EventHandler):
             self.engine.event_handler = InventoryDropHandler(self.engine)
 
         elif key == tcod.event.K_ESCAPE:
-            action = EscapeAction(player)
+            raise SystemExit()
 
         return action
 
@@ -234,9 +233,9 @@ class InventoryEventHandler(AskUserEventHandler):
         if number_of_items_in_inventory > 0:
             for i, item in enumerate(self.engine.player.inventory.items):
                 item_key = chr(ord("a") + i)
-                console.print(x + 1, y + 1, f"({item_key}) {item.name}")
-            else:
-                console.print(x + 1, y + 1, "(Empty)")
+                console.print(x + 1, y + i + 1, f"({item_key}) {item.name}")
+        else:
+            console.print(x + 1, y + 1, "(Empty)")
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[Action]:
         player = self.engine.player

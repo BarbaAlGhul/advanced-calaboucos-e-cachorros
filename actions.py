@@ -22,11 +22,6 @@ class Action:
         raise NotImplementedError()
 
 
-class EscapeAction(Action):
-    def perform(self) -> None:
-        raise SystemExit()
-
-
 class ActionWithDirection(Action):
     def __init__(self, entity: Actor, dx: int, dy: int):
         super().__init__(entity)
@@ -48,11 +43,6 @@ class ActionWithDirection(Action):
 
     def perform(self) -> None:
         raise NotImplementedError()
-
-
-class DropItem(ItemAction):
-    def perform(self) -> None:
-        self.entity.inventory.drop(self.item)
 
 
 class WaitAction(Action):
@@ -98,6 +88,11 @@ class PickupAction(Action):
                 return
 
         raise exceptions.Impossible("There is nothing here to pick up.")
+
+
+class DropItem(ItemAction):
+    def perform(self) -> None:
+        self.entity.inventory.drop(self.item)
 
 
 class MeleeAction(ActionWithDirection):

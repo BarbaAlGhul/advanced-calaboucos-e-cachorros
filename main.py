@@ -27,7 +27,7 @@ def main() -> None:
     )
 
     player = copy.deepcopy(entity_factories.player)
-    
+
     engine = Engine(player=player)
 
     engine.game_map = generate_dungeon(
@@ -46,7 +46,6 @@ def main() -> None:
         "Hello and welcome to Calabouços e Cachorros Avançado!", color.welcome_text
     )
 
-
     with tcod.context.new_terminal(
         screen_width,
         screen_height,
@@ -59,7 +58,7 @@ def main() -> None:
             root_console.clear()
             engine.event_handler.on_render(console=root_console)
             context.present(root_console)
-            
+
             try:
                 for event in tcod.event.wait():
                     context.convert_event(event)
