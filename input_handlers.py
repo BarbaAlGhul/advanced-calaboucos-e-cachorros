@@ -5,9 +5,10 @@ from typing import Optional, TYPE_CHECKING
 import tcod.event
 
 from actions import (
-    Action, 
-    BumpAction, 
-    EscapeAction, 
+    Action,
+    BumpAction,
+    EscapeAction,
+    PickupAction,
     WaitAction
     )
 import color
@@ -100,6 +101,8 @@ class MainGameEventHandler(EventHandler):
             action = WaitAction(player)
         elif key == tcod.event.K_v:
             self.engine.event_handler = HistoryViewer(self.engine)
+        elif key == tcod.event.K_g:
+            action = PickupAction(player)
 
         elif key == tcod.event.K_ESCAPE:
             action = EscapeAction(player)
