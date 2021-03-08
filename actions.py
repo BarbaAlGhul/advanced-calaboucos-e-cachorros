@@ -50,6 +50,11 @@ class ActionWithDirection(Action):
         raise NotImplementedError()
 
 
+class DropItem(ItemAction):
+    def perform(self) -> None:
+        self.entity.inventory.drop(self.item)
+
+
 class WaitAction(Action):
     def perform(self) -> None:
         pass
@@ -84,7 +89,7 @@ class PickupAction(Action):
             if actor_location_x == item.x and actor_location_y == item.y:
                 if len(inventory.items) >= inventory.capacity:
                     raise exceptions.Impossible("Your inventory is full.")
-                
+
                 self.engine.game_map.entities.remove(item)
                 item.parent = self.entity.inventory
                 inventory.items.append(item)
@@ -124,13 +129,13 @@ class MovementAction(ActionWithDirection):
 
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             raise exceptions.Impossible("That way is blocked")
-        
+
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
             raise exceptions.Impossible("That way is blocked")
 
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
             raise exceptions.Impossible("That way is blocked")
-        
+
         self.entity.move(self.dx, self.dy)
 
 
