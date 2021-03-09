@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, Callable, Tuple, TYPE_CHECKING
 
 import tcod.event
 
@@ -239,13 +239,20 @@ class LookHandler(SelectIndexHandler):
         self.engine.event_handler = MainGameEventHandler(self.engine)
 
 
+class SingleRangedAttackHandler(SelectIndexHandler):
+    def __init__(self, engine: Engine, callback: Callable[[Tuple[int, int]], Optional[Action]]):
+        super().__init__(engine)
+        self.callback = callback
+
+    def on_index_selected(self, x: int, y: int) -> Optional[Action]:
+        return self.callback((x, y))
+
+
 class MainGameEventHandler(EventHandler):
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[Action]:
         action: Optional[Action] = None
 
         key = event.sym
-        print(event)
-
         player = self.engine.player
 
         if key in MOVE_KEYS:
