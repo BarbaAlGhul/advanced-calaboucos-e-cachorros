@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import math
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
 
 from render_order import RenderOrder
@@ -26,7 +27,7 @@ class Entity:
         y: int = 0,
         char: str = "?",
         color: Tuple[int, int, int] = (255, 255, 255),
-        name: str = "<Unamed>",
+        name: str = "<Unnamed>",
         blocks_movement: bool = False,
         render_order: RenderOrder = RenderOrder.CORPSE
     ):
@@ -66,6 +67,9 @@ class Entity:
     def move(self, dx: int, dy: int) -> None:
         self.x += dx
         self.y += dy
+
+    def distance(self, x: int, y: int) -> float:
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
 
 
 class Actor(Entity):
