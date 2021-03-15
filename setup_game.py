@@ -47,10 +47,6 @@ def new_game() -> Engine:
 
 
 class MainMenu(input_handlers.BaseEventHandler):
-    for i, text in enumerate(
-            ["[N] Start a new game", "[L] Load game", "[Q] Quit game"]
-    ):
-        pass
     def on_render(self, console: tcod.Console) -> None:
         console.draw_semigraphics(background_image, 0, 0)
 
@@ -69,18 +65,21 @@ class MainMenu(input_handlers.BaseEventHandler):
             "CALABOUÇOS E CACHORROS AVANÇADO",
             fg=color.menu_title,
             alignment=tcod.CENTER,
-            )
+        )
 
         menu_width = 24
-        console.print(
-            console.width // 2,
-            console.height // 2 - 2 + i,
-            text.ljust(menu_width),
-            fg=color.menu_text,
-            bg=color.black,
-            bg_blend=tcod.BKGND_ALPHA(64),
-            alignment=tcod.CENTER
-        )
+        for i, text in enumerate(
+            ["[N] Start a new game", "[L] Load game", "[Q] Quit game"]
+        ):
+            console.print(
+                console.width // 2,
+                console.height // 2 - 2 + i,
+                text.ljust(menu_width),
+                fg=color.menu_text,
+                bg=color.black,
+                bg_blend=tcod.BKGND_ALPHA(64),
+                alignment=tcod.CENTER
+            )
 
     def ev_keydown(self, event: "tcod.event.KeyDown") -> Optional[input_handlers.BaseEventHandler]:
         if event.sym in (tcod.event.K_q, tcod.event.K_ESCAPE):
