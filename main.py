@@ -67,7 +67,7 @@ def main() -> None:
                 try:
                     for event in tcod.event.wait():
                         context.convert_event(event)
-                        engine.event_handler.handle_events(event)
+                        handler = handler.handle_events(event)
                 except Exception:
                     traceback.print_exc()
                     engine.message_log.add_message(traceback.format_exc(), color.error)
