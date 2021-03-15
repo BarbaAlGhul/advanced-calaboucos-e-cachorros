@@ -322,7 +322,13 @@ class MainGameEventHandler(EventHandler):
         action: Optional[Action] = None
 
         key = event.sym
+        modifier = event.mod
         player = self.engine.player
+
+        if key == tcod.event.K_PERIOD and modifier & (
+            tcod.event.KMOD_LSHIFT | tcod.event.KMOD_RSHIFT
+        ):
+            return actions.TakeStairsAction(player)
 
         if key in MOVE_KEYS:
             dx, dy = MOVE_KEYS[key]
@@ -339,7 +345,7 @@ class MainGameEventHandler(EventHandler):
             return InventoryActivateHandler(self.engine)
         elif key == tcod.event.K_d:
             return InventoryDropHandler(self.engine)
-        elif key == tcod.event.K_SLASH or tcod.event.K_KP_DIVIDE:
+        elif key == tcod.event.K_SLASH or key == tcod.event.K_KP_DIVIDE:
             return LookHandler(self.engine)
 
         return action

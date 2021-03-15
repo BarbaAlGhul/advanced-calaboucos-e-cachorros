@@ -12,7 +12,7 @@ import color
 from engine import Engine
 import entity_factories
 import input_handlers
-from procgen import generate_dungeon
+from game_map import GameWorld
 
 background_image = tcod.image.load("img/calaboucos_e_cachorros_title.png")[:, :, :3]
 
@@ -31,7 +31,8 @@ def new_game() -> Engine:
 
     engine = Engine(player=player)
 
-    engine.game_map = generate_dungeon(
+    engine.game_world = GameWorld(
+        engine=engine,
         max_rooms=max_rooms,
         room_min_size=room_min_size,
         room_max_size=room_max_size,
@@ -39,8 +40,8 @@ def new_game() -> Engine:
         map_height=map_height,
         max_monsters_per_room=max_monsters_per_room,
         max_items_per_room=max_items_per_room,
-        engine=engine,
     )
+    engine.game_world.generate_floor()
     engine.update_fov()
 
     engine.message_log.add_message(
