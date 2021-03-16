@@ -43,6 +43,22 @@ def new_game() -> Engine:
     engine.message_log.add_message(
         "Hello and welcome to Calabouços e Cachorros Avançado!", color.welcome_text
     )
+
+    dagger = copy.deepcopy(entity_factories.dagger)
+    leather_armor = copy.deepcopy(entity_factories.leather_armor)
+    health_potion = copy.deepcopy(entity_factories.health_potion)
+
+    dagger.parent = player.inventory
+    leather_armor.parent = player.inventory
+    health_potion.parent = player.inventory
+
+    player.inventory.items.append(dagger)
+    player.equipment.toggle_equip(dagger, add_message=False)
+
+    player.inventory.items.append(leather_armor)
+    player.equipment.toggle_equip(leather_armor, add_message=False)
+
+    player.inventory.items.append(health_potion)
     return engine
 
 
