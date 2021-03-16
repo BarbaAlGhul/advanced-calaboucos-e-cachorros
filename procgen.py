@@ -64,7 +64,10 @@ def place_entities(
         y = random.randint(room.y1 + 1, room.y2 - 1)
 
         if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-            if random.random() < 0.8:
+            monster_chance = random.random()
+            if monster_chance < 0.6:
+                entity_factories.kobold.spawn(dungeon, x, y)
+            elif monster_chance < 0.8:
                 entity_factories.goblin.spawn(dungeon, x, y)
             else:
                 entity_factories.orc.spawn(dungeon, x, y)

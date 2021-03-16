@@ -20,7 +20,7 @@ goblin = Actor(
     color=(63, 127, 63), 
     name="Goblin",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=10, defense=1, power=3),
+    fighter=Fighter(hp=10, defense=1, power=4),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=35)
 )
@@ -30,7 +30,7 @@ orc = Actor(
     color=(0, 127, 0), 
     name="Orc",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=15, defense=2, power=5),
+    fighter=Fighter(hp=15, defense=2, power=7),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=65)
 )
@@ -40,7 +40,7 @@ kobold = Actor(
     color=(210, 105, 30),
     name="Kobold",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=6, defense=1, power=1),
+    fighter=Fighter(hp=6, defense=1, power=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=15)
 )
