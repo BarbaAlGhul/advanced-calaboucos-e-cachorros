@@ -301,13 +301,12 @@ class InventoryEventHandler(AskUserEventHandler):
             for i, item in enumerate(self.engine.player.inventory.items):
                 item_key = chr(ord("a") + i)
                 is_equipped = self.engine.player.equipment.item_is_equipped(item)
-
                 item_string = f"({item_key}) {item.name}"
 
                 if is_equipped:
                     item_string = f"{item_string} (E)"
 
-                console.print(x + 1, y + 1, item_string)
+                console.print(x + 1, y + i + 1, item_string)
         else:
             console.print(x + 1, y + 1, "(Empty)")
 
