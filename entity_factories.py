@@ -2,6 +2,7 @@ from components.ai import HostileEnemy, BaseAI
 from components import consumable
 from components.fighter import Fighter
 from components.inventory import Inventory
+from components.level import Level
 from entity import Actor, Item
 
 player = Actor(
@@ -10,7 +11,8 @@ player = Actor(
     name="Player", 
     ai_cls=BaseAI,
     fighter=Fighter(hp=30, defense=2, power=5),
-    inventory=Inventory(capacity=26)
+    inventory=Inventory(capacity=26),
+    level=Level(level_up_base=200)
 )
 
 goblin = Actor(
@@ -19,7 +21,8 @@ goblin = Actor(
     name="Goblin",
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=10, defense=1, power=3),
-    inventory=Inventory(capacity=0)
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=35)
 )
 
 orc = Actor(
@@ -28,7 +31,18 @@ orc = Actor(
     name="Orc",
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=15, defense=2, power=5),
-    inventory=Inventory(capacity=0)
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=65)
+)
+
+kobold = Actor(
+    char="k",
+    color=(210, 105, 30),
+    name="Kobold",
+    ai_cls=HostileEnemy,
+    fighter=Fighter(hp=6, defense=1, power=1),
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=15)
 )
 
 health_potion = Item(
