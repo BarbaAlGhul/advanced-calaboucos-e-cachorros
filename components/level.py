@@ -50,6 +50,7 @@ class Level(BaseComponent):
 
     def increase_level(self) -> None:
         self.current_level += 1
+        self.engine.player.fighter.hp = self.engine.player.fighter.max_hp
 
     def increase_max_hp(self, amount: int = 20) -> None:
         self.parent.fighter.max_hp += amount
