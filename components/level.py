@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from typing import TYPE_CHECKING
 
 from components.base_component import BaseComponent
@@ -27,11 +29,11 @@ class Level(BaseComponent):
 
     @property
     def experience_to_next_level(self) -> int:
-        return self.level_up_base + self.current_level * self.level_up_factor
+        return self.level_up_base + int(math.pow(self.current_level, 2)) * self.level_up_factor
     
     @property
     def requires_level_up(self) -> bool:
-        return self.current_xp > self.experience_to_next_level
+        return self.current_xp >= self.experience_to_next_level
 
     def add_xp(self, xp: int) -> None:
         if xp == 0 or self.level_up_base == 0:
@@ -47,7 +49,6 @@ class Level(BaseComponent):
             )
 
     def increase_level(self) -> None:
-        self.current_xp -= self.experience_to_next_level
         self.current_level += 1
 
     def increase_max_hp(self, amount: int = 20) -> None:

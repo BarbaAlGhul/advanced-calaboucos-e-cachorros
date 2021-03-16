@@ -22,7 +22,7 @@ goblin = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=10, defense=1, power=4),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=35)
+    level=Level(xp_given=50)
 )
 
 orc = Actor(
@@ -32,7 +32,7 @@ orc = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=15, defense=2, power=7),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=65)
+    level=Level(xp_given=100)
 )
 
 kobold = Actor(
@@ -42,7 +42,7 @@ kobold = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=6, defense=1, power=3),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=15)
+    level=Level(xp_given=25)
 )
 
 health_potion = Item(
